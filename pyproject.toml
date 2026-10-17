@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pricewise-pt"
+version = "0.1.0"
+description = "Price estimates with honest uncertainty ranges and backtests, plus Portuguese vehicle tax (ISV/IUC) rules as tested code."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "João Pedro Cardoso" }]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "scikit-learn>=1.4"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"pricewise.tax" = ["tables/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

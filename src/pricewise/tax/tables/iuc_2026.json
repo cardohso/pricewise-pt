@@ -1,0 +1,133 @@
+{
+  "year": 2026,
+  "sources": [
+    "Código do Imposto Único de Circulação (Lei 22-A/2007), art. 10 (categoria B), 2026 values",
+    "Lei 119/2019: the first registration in the EU/EEA decides the category and the year coefficient",
+    "Official texts: Diário da República (diariodarepublica.pt); guidance: Autoridade Tributária e Aduaneira (portaldasfinancas.gov.pt)"
+  ],
+  "note": "For illustration only, not tax advice: check the current law before relying on these figures.",
+  "category_b_from": "2007-07-01",
+  "engine": [
+    [
+      1250,
+      31.77
+    ],
+    [
+      1750,
+      63.74
+    ],
+    [
+      2500,
+      127.35
+    ],
+    [
+      null,
+      435.84
+    ]
+  ],
+  "co2": {
+    "nedc": [
+      [
+        120,
+        65.15
+      ],
+      [
+        180,
+        97.63
+      ],
+      [
+        250,
+        212.04
+      ],
+      [
+        null,
+        363.25
+      ]
+    ],
+    "wltp": [
+      [
+        140,
+        65.15
+      ],
+      [
+        205,
+        97.63
+      ],
+      [
+        260,
+        212.04
+      ],
+      [
+        null,
+        363.25
+      ]
+    ]
+  },
+  "co2_extra_from": "2017-01-01",
+  "co2_extra": {
+    "nedc": [
+      [
+        180,
+        0.0
+      ],
+      [
+        250,
+        31.77
+      ],
+      [
+        null,
+        63.74
+      ]
+    ],
+    "wltp": [
+      [
+        205,
+        0.0
+      ],
+      [
+        260,
+        31.77
+      ],
+      [
+        null,
+        63.74
+      ]
+    ]
+  },
+  "coefficient": [
+    [
+      2007,
+      1.0
+    ],
+    [
+      2008,
+      1.05
+    ],
+    [
+      2009,
+      1.1
+    ],
+    [
+      null,
+      1.15
+    ]
+  ],
+  "diesel_extra": [
+    [
+      1250,
+      5.02
+    ],
+    [
+      1750,
+      10.07
+    ],
+    [
+      2500,
+      20.12
+    ],
+    [
+      null,
+      68.85
+    ]
+  ]
+}

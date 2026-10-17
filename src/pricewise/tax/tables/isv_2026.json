@@ -1,0 +1,251 @@
+{
+  "year": 2026,
+  "sources": [
+    "Código do Imposto sobre Veículos (Lei 22-A/2007), art. 7, tabela A — values unchanged since 2024",
+    "Código do ISV, art. 11, tabela D, as amended by Lei 45-A/2024 (Orçamento do Estado 2025): one age-reduction table for both components",
+    "Código do ISV, art. 8, as amended by Lei 73-A/2025 (Orçamento do Estado 2026): plug-in hybrid CO2 limit 80 g/km for Euro 6e-bis",
+    "Official texts: Diário da República (diariodarepublica.pt); guidance: Autoridade Tributária e Aduaneira (portaldasfinancas.gov.pt)"
+  ],
+  "note": "For illustration only, not tax advice: check the current law before relying on these figures.",
+  "engine": [
+    [
+      1000,
+      1.09,
+      849.03
+    ],
+    [
+      1250,
+      1.18,
+      850.69
+    ],
+    [
+      null,
+      5.61,
+      6194.88
+    ]
+  ],
+  "co2": {
+    "petrol": {
+      "wltp": [
+        [
+          110,
+          0.44,
+          43.02
+        ],
+        [
+          115,
+          1.1,
+          115.8
+        ],
+        [
+          120,
+          1.38,
+          147.79
+        ],
+        [
+          130,
+          5.27,
+          619.17
+        ],
+        [
+          145,
+          6.38,
+          762.73
+        ],
+        [
+          175,
+          41.54,
+          5819.56
+        ],
+        [
+          195,
+          51.38,
+          7247.39
+        ],
+        [
+          235,
+          193.01,
+          34190.52
+        ],
+        [
+          null,
+          233.81,
+          41910.96
+        ]
+      ],
+      "nedc": [
+        [
+          99,
+          4.62,
+          427.0
+        ],
+        [
+          115,
+          8.09,
+          750.99
+        ],
+        [
+          145,
+          52.56,
+          5903.94
+        ],
+        [
+          175,
+          61.24,
+          7140.17
+        ],
+        [
+          195,
+          155.97,
+          23627.27
+        ],
+        [
+          null,
+          205.65,
+          33390.12
+        ]
+      ]
+    },
+    "diesel": {
+      "wltp": [
+        [
+          110,
+          1.72,
+          11.5
+        ],
+        [
+          120,
+          18.96,
+          1906.19
+        ],
+        [
+          140,
+          65.04,
+          7360.85
+        ],
+        [
+          150,
+          127.4,
+          16080.57
+        ],
+        [
+          160,
+          160.81,
+          21176.06
+        ],
+        [
+          170,
+          221.69,
+          29227.38
+        ],
+        [
+          190,
+          274.08,
+          36987.98
+        ],
+        [
+          null,
+          282.35,
+          38271.32
+        ]
+      ],
+      "nedc": [
+        [
+          79,
+          5.78,
+          439.04
+        ],
+        [
+          95,
+          23.45,
+          1848.58
+        ],
+        [
+          120,
+          79.22,
+          7195.63
+        ],
+        [
+          140,
+          175.73,
+          18924.92
+        ],
+        [
+          160,
+          195.43,
+          21720.92
+        ],
+        [
+          null,
+          268.42,
+          33447.9
+        ]
+      ]
+    }
+  },
+  "age_reduction": [
+    [
+      1,
+      0.1
+    ],
+    [
+      2,
+      0.2
+    ],
+    [
+      3,
+      0.28
+    ],
+    [
+      4,
+      0.35
+    ],
+    [
+      5,
+      0.43
+    ],
+    [
+      6,
+      0.52
+    ],
+    [
+      7,
+      0.6
+    ],
+    [
+      8,
+      0.65
+    ],
+    [
+      9,
+      0.7
+    ],
+    [
+      10,
+      0.75
+    ],
+    [
+      null,
+      0.8
+    ]
+  ],
+  "regimes": {
+    "plugin_hybrid": {
+      "factor": 0.25,
+      "min_range_km": 50,
+      "max_co2": 50,
+      "max_co2_euro_6e_bis": 80
+    },
+    "hybrid": {
+      "factor": 0.4,
+      "min_range_km": 50,
+      "max_co2": 50
+    },
+    "cng": {
+      "factor": 0.4
+    }
+  },
+  "particle_surcharge": 500.0,
+  "particle_threshold_g_km": 0.001,
+  "minimum": 100.0
+}
