@@ -15,9 +15,9 @@ from pricewise.valuation.ranges import LIKELY, WIDE, Ranges
 @dataclass(frozen=True)
 class Estimate:
     point: float
-    likely: tuple[float, float]       # half of similar items land inside
-    wide: tuple[float, float]         # eight in ten do
-    comparables: float | None         # the baseline's opinion, if it has one
+    likely: tuple[float, float]  # half of similar items land inside
+    wide: tuple[float, float]  # eight in ten do
+    comparables: float | None  # the baseline's opinion, if it has one
 
 
 class Valuer:
@@ -33,6 +33,9 @@ class Valuer:
 
     def estimate(self, item: Item) -> Estimate:
         point = float(self.model.predict([item])[0])
-        return Estimate(point, self.ranges.interval(item, point, LIKELY),
-                        self.ranges.interval(item, point, WIDE),
-                        comparables.estimate(self.pool, item))
+        return Estimate(
+            point,
+            self.ranges.interval(item, point, LIKELY),
+            self.ranges.interval(item, point, WIDE),
+            comparables.estimate(self.pool, item),
+        )

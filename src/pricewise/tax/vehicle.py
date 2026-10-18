@@ -17,13 +17,13 @@ class Fuel(Enum):
 
 @dataclass(frozen=True)
 class Vehicle:
-    first_registration: date              # first registration anywhere in the EU/EEA
+    first_registration: date  # first registration anywhere in the EU/EEA
     fuel: Fuel
-    cc: int | None = None                 # engine size; None only for electric cars
-    co2_g_km: float | None = None         # combined value from the certificate of conformity
-    co2_standard: str | None = None       # "nedc" | "wltp" | None (unknown)
-    euro_norm: str | None = None          # e.g. "6d", "6e-bis"
-    particles_g_km: float | None = None   # diesel: field V.5 of the registration document
+    cc: int | None = None  # engine size; None only for electric cars
+    co2_g_km: float | None = None  # combined value from the certificate of conformity
+    co2_standard: str | None = None  # "nedc" | "wltp" | None (unknown)
+    euro_norm: str | None = None  # e.g. "6d", "6e-bis"
+    particles_g_km: float | None = None  # diesel: field V.5 of the registration document
     electric_range_km: int | None = None  # plug-in hybrids
     hybrid_base_fuel: Fuel = Fuel.PETROL  # which CO2 table a hybrid uses
 

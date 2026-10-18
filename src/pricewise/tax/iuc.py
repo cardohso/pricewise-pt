@@ -38,7 +38,8 @@ def iuc(v: Vehicle, *, year: int = tables.CURRENT_YEAR) -> IucBreakdown:
         return IucBreakdown(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, v.co2_standard or "wltp")
     if v.first_registration < date.fromisoformat(t["category_b_from"]):
         raise CategoryANotSupported(
-            f"first registered {v.first_registration}: IUC category A is not supported")
+            f"first registered {v.first_registration}: IUC category A is not supported"
+        )
     if v.cc is None or v.co2_g_km is None:
         raise ValueError("IUC needs the engine size (cc) and CO2 (g/km)")
     standard = v.co2_standard or guess_standard(v.first_registration)[-1]

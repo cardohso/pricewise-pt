@@ -36,14 +36,17 @@ class Ranges:
     def fit(cls, items: Sequence[Item], predicted: Sequence[float]) -> Ranges:
         errors: dict[str, list[float]] = defaultdict(list)
         everything = []
-        for item, p in zip(items, predicted):
+        for item, p in zip(items, predicted, strict=True):
             e = math.log(item.price / p)
             everything.append(e)
             for k in _keys(item):
                 errors[k].append(e)
         q = lambda es, qs: tuple(float(v) for v in np.quantile(es, qs))  # noqa: E731
-        bands = {k: {LIKELY: q(es, LIKELY), WIDE: q(es, WIDE)}
-                 for k, es in errors.items() if len(es) >= MIN_SEGMENT}
+        bands = {
+            k: {LIKELY: q(es, LIKELY), WIDE: q(es, WIDE)}
+            for k, es in errors.items()
+            if len(es) >= MIN_SEGMENT
+        }
         return cls(bands, {LIKELY: q(everything, LIKELY), WIDE: q(everything, WIDE)})
 
     def band(self, item: Item, which: tuple = LIKELY) -> tuple[float, float]:

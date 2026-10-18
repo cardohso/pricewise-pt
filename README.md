@@ -1,5 +1,7 @@
 # pricewise-pt
 
+[![ci](https://github.com/cardohso/pricewise-pt/actions/workflows/ci.yml/badge.svg)](https://github.com/cardohso/pricewise-pt/actions/workflows/ci.yml)
+
 **Price estimates with honest uncertainty, evaluated the way they'll be used, plus Portugal's vehicle tax rules (ISV/IUC) as tested code.**
 
 ## In 30 seconds
@@ -63,8 +65,8 @@ from datetime import date
 from pricewise.tax import Fuel, Vehicle, isv, iuc
 
 v = Vehicle(date(2019, 6, 15), Fuel.PETROL, cc=1199, co2_g_km=125, co2_standard="wltp")
-isv(v, date(2026, 10, 1)).total   # 211.3  (engine + CO2 components, 65% age reduction)
-iuc(v).total                      # 111.46 per year
+isv(v, date(2026, 10, 1)).total  # 211.3  (engine + CO2 components, 65% age reduction)
+iuc(v).total  # 111.46 per year
 ```
 
 - **Covers:** engine and CO2 components (NEDC and WLTP), the age reduction table, the reduced regimes for hybrids and plug-in hybrids (including the Euro 6e-bis limit from the Orçamento do Estado 2026), the diesel particle surcharge, the €100 minimum and IUC category B.
