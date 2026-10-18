@@ -14,10 +14,14 @@ MIN_COMPARABLES = 3
 
 
 def similar(pool: Sequence[Item], target: Item) -> list[Item]:
-    return [i for i in pool
-            if i.group_id != target.group_id and i.category == target.category
-            and abs(i.age_years - target.age_years) <= AGE_TOLERANCE
-            and abs(i.usage - target.usage) <= USAGE_TOLERANCE * max(target.usage, 1.0)]
+    return [
+        i
+        for i in pool
+        if i.group_id != target.group_id
+        and i.category == target.category
+        and abs(i.age_years - target.age_years) <= AGE_TOLERANCE
+        and abs(i.usage - target.usage) <= USAGE_TOLERANCE * max(target.usage, 1.0)
+    ]
 
 
 def estimate(pool: Sequence[Item], target: Item) -> float | None:

@@ -33,7 +33,7 @@ def test_diesel_particles_exact_and_unknown():
     dirty = isv(Vehicle(date(2020, 3, 1), particles_g_km=0.002, **base), ON)
     unknown = isv(Vehicle(date(2020, 3, 1), **base), ON)
     assert clean.total == 1217.64
-    assert dirty.total == 1217.64 + 500                      # surcharge at >= 0.001 g/km
+    assert dirty.total == 1217.64 + 500  # surcharge at >= 0.001 g/km
     assert unknown.total == 1717.64 and unknown.particle_kind == "estimated"
     assert any("V.5" in f for f in unknown.flags)
 
@@ -53,10 +53,12 @@ def test_electric_pays_nothing():
 def test_unknown_standard_is_computed_both_ways_where_both_are_possible():
     v = Vehicle(date(2018, 9, 1), Fuel.PETROL, cc=1199, co2_g_km=125)
     b = isv(v, ON)
-    nedc = isv(Vehicle(date(2018, 9, 1), Fuel.PETROL, cc=1199, co2_g_km=125,
-                       co2_standard="nedc"), ON).total
-    wltp = isv(Vehicle(date(2018, 9, 1), Fuel.PETROL, cc=1199, co2_g_km=125,
-                       co2_standard="wltp"), ON).total
+    nedc = isv(
+        Vehicle(date(2018, 9, 1), Fuel.PETROL, cc=1199, co2_g_km=125, co2_standard="nedc"), ON
+    ).total
+    wltp = isv(
+        Vehicle(date(2018, 9, 1), Fuel.PETROL, cc=1199, co2_g_km=125, co2_standard="wltp"), ON
+    ).total
     assert b.total == max(nedc, wltp) and b.alternative_total == min(nedc, wltp)
     assert b.standard_kind == "estimated" and b.flags
     assert guess_standard(date(2016, 1, 1)) == ["nedc"]
@@ -66,18 +68,28 @@ def test_unknown_standard_is_computed_both_ways_where_both_are_possible():
 def test_age_reduction_boundaries():
     t = load("isv")
     first = date(2020, 5, 10)
-    assert age_reduction(first, date(2021, 5, 10), t) == 0.10      # "até 1 ano" inclusive
+    assert age_reduction(first, date(2021, 5, 10), t) == 0.10  # "até 1 ano" inclusive
     assert age_reduction(first, date(2021, 5, 11), t) == 0.20
     assert age_reduction(first, date(2040, 1, 1), t) == 0.80
 
 
-@pytest.mark.parametrize("euro, co2, expected", [
-    ("6d", 60, "normal"),            # 60 g/km is over the general 50 g/km limit
-    ("6e-bis", 60, "plugin_hybrid"),  # Lei 73-A/2025: 80 g/km for Euro 6e-bis
-])
+@pytest.mark.parametrize(
+    "euro, co2, expected",
+    [
+        ("6d", 60, "normal"),  # 60 g/km is over the general 50 g/km limit
+        ("6e-bis", 60, "plugin_hybrid"),  # Lei 73-A/2025: 80 g/km for Euro 6e-bis
+    ],
+)
 def test_plugin_hybrid_regime(euro, co2, expected):
-    v = Vehicle(date(2024, 3, 1), Fuel.PLUGIN_HYBRID, cc=1498, co2_g_km=co2,
-                co2_standard="wltp", euro_norm=euro, electric_range_km=60)
+    v = Vehicle(
+        date(2024, 3, 1),
+        Fuel.PLUGIN_HYBRID,
+        cc=1498,
+        co2_g_km=co2,
+        co2_standard="wltp",
+        euro_norm=euro,
+        electric_range_km=60,
+    )
     assert isv(v, ON).regime == expected
 
 

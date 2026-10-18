@@ -33,7 +33,7 @@ def money(x: Decimal) -> float:
 def add_years(d: date, years: int) -> date:
     try:
         return d.replace(year=d.year + years)
-    except ValueError:              # 29 February
+    except ValueError:  # 29 February
         return d.replace(year=d.year + years, day=28)
 
 
@@ -58,17 +58,17 @@ def guess_standard(first_registration: date) -> list[str]:
 @dataclass(frozen=True)
 class IsvBreakdown:
     total: float
-    engine: float                 # after age reduction and regime factor
+    engine: float  # after age reduction and regime factor
     co2: float
-    reduction: float              # age reduction applied (0.10–0.80)
-    regime: str                   # "normal" | "electric" | "plugin_hybrid" | "hybrid"
+    reduction: float  # age reduction applied (0.10–0.80)
+    regime: str  # "normal" | "electric" | "plugin_hybrid" | "hybrid"
     regime_factor: float
     minimum_applied: bool
     particle_surcharge: float
-    particle_kind: str            # exact | estimated
+    particle_kind: str  # exact | estimated
     co2_standard: str
-    standard_kind: str            # exact | estimated
-    alternative_total: float | None = None   # the other standard, when it's unknown
+    standard_kind: str  # exact | estimated
+    alternative_total: float | None = None  # the other standard, when it's unknown
     flags: list[str] = field(default_factory=list)
 
 
@@ -80,10 +80,15 @@ def _regime(v: Vehicle, t: dict) -> tuple[str, float]:
         rule = t["regimes"][key]
         max_co2 = rule["max_co2"]
         if key == "plugin_hybrid" and (v.euro_norm or "").lower().replace(" ", "") in (
-                "6e-bis", "euro6e-bis"):
+            "6e-bis",
+            "euro6e-bis",
+        ):
             max_co2 = rule["max_co2_euro_6e_bis"]
-        if (v.electric_range_km or 0) >= rule["min_range_km"] and \
-                v.co2_g_km is not None and v.co2_g_km < max_co2:
+        if (
+            (v.electric_range_km or 0) >= rule["min_range_km"]
+            and v.co2_g_km is not None
+            and v.co2_g_km < max_co2
+        ):
             return key, rule["factor"]
     return "normal", 1.0
 
@@ -91,7 +96,7 @@ def _regime(v: Vehicle, t: dict) -> tuple[str, float]:
 def _particles(v: Vehicle, t: dict) -> tuple[float, str]:
     if v.tax_fuel != "diesel" or v.fuel is Fuel.ELECTRIC:
         return 0.0, EXACT
-    if v.particles_g_km is None:                # unknown: assume it's due
+    if v.particles_g_km is None:  # unknown: assume it's due
         return t["particle_surcharge"], ESTIMATED
     due = v.particles_g_km >= t["particle_threshold_g_km"]
     return (t["particle_surcharge"] if due else 0.0), EXACT
@@ -114,9 +119,19 @@ def _compute(v: Vehicle, standard: str, on: date, t: dict) -> IsvBreakdown:
     subtotal = money((engine + co2) * keep)
     minimum_applied = subtotal < t["minimum"]
     base = t["minimum"] if minimum_applied else subtotal
-    return IsvBreakdown(money(D(base) + D(surcharge)), money(engine * keep), money(co2 * keep),
-                        reduction, regime, factor, minimum_applied, surcharge, particle_kind,
-                        standard, EXACT)
+    return IsvBreakdown(
+        money(D(base) + D(surcharge)),
+        money(engine * keep),
+        money(co2 * keep),
+        reduction,
+        regime,
+        factor,
+        minimum_applied,
+        surcharge,
+        particle_kind,
+        standard,
+        EXACT,
+    )
 
 
 def isv(v: Vehicle, on: date, *, year: int = tables.CURRENT_YEAR) -> IsvBreakdown:
@@ -130,16 +145,22 @@ def isv(v: Vehicle, on: date, *, year: int = tables.CURRENT_YEAR) -> IsvBreakdow
         options = [_compute(v, s, on, t) for s in guess_standard(v.first_registration)]
         worst = max(options, key=lambda b: b.total)
         other = min(options, key=lambda b: b.total)
-        result = IsvBreakdown(**{**worst.__dict__, "standard_kind": ESTIMATED,
-                                 "alternative_total": other.total if len(options) > 1 else None,
-                                 "flags": []})
+        result = IsvBreakdown(
+            **{
+                **worst.__dict__,
+                "standard_kind": ESTIMATED,
+                "alternative_total": other.total if len(options) > 1 else None,
+                "flags": [],
+            }
+        )
     flags = list(result.flags)
     if result.standard_kind == ESTIMATED and result.regime != "electric":
-        flags.append("CO2 standard (NEDC/WLTP) assumed from the registration date: "
-                     "confirm it on the certificate of conformity")
+        flags.append(
+            "CO2 standard (NEDC/WLTP) assumed from the registration date: "
+            "confirm it on the certificate of conformity"
+        )
     if result.particle_kind == ESTIMATED and result.particle_surcharge:
-        flags.append("diesel particle value unknown: check field V.5 of the registration "
-                     "document")
+        flags.append("diesel particle value unknown: check field V.5 of the registration document")
     if result.minimum_applied:
         flags.append(f"ISV minimum (€{t['minimum']:.0f}) applied")
     return IsvBreakdown(**{**result.__dict__, "flags": flags})

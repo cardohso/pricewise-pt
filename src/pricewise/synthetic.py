@@ -19,7 +19,7 @@ import numpy as np
 
 from pricewise.valuation.items import Item
 
-CATEGORIES = {        # name: (base price, yearly depreciation, usage elasticity)
+CATEGORIES = {  # name: (base price, yearly depreciation, usage elasticity)
     "compact": (19_000, 0.11, 0.10),
     "hatchback": (15_000, 0.12, 0.09),
     "crossover": (24_000, 0.10, 0.11),
@@ -28,7 +28,7 @@ CATEGORIES = {        # name: (base price, yearly depreciation, usage elasticity
 }
 CONDITION = {"good": 1.05, "fair": 1.0, "poor": 0.85}
 START = date(2025, 1, 1)
-DRIFT_PER_DAY = 0.0002          # ~7% a year
+DRIFT_PER_DAY = 0.0002  # ~7% a year
 RELIST_SHARE = 0.15
 
 
@@ -44,36 +44,81 @@ def generate(n: int = 4_000, seed: int = 7) -> list[Item]:
         condition = rng.choice(list(CONDITION), p=[0.3, 0.55, 0.15])
         listed = START + timedelta(days=int(rng.integers(0, 365)))
         noise = rng.normal(0, 0.06 + 0.012 * age)
-        price = (base * math.exp(-dep * age) * (usage / (age * 14_000)) ** -elasticity
-                 * CONDITION[condition] * math.exp(DRIFT_PER_DAY * (listed - START).days)
-                 * math.exp(noise))
+        price = (
+            base
+            * math.exp(-dep * age)
+            * (usage / (age * 14_000)) ** -elasticity
+            * CONDITION[condition]
+            * math.exp(DRIFT_PER_DAY * (listed - START).days)
+            * math.exp(noise)
+        )
         price = round(max(price, 500), -1)
-        hidden = None if rng.random() < 0.2 else str(condition)     # not every ad says
+        hidden = None if rng.random() < 0.2 else str(condition)  # not every ad says
         group = f"g{k}"
-        items.append(Item(f"i{k}", group, cat, round(age, 2), round(usage), listed, price,
-                          hidden))
+        items.append(Item(f"i{k}", group, cat, round(age, 2), round(usage), listed, price, hidden))
         if rng.random() < RELIST_SHARE:
             later = listed + timedelta(days=int(rng.integers(14, 60)))
-            items.append(Item(f"i{k}r", group, cat, round(age + (later - listed).days / 365, 2),
-                              round(usage), later, round(price * rng.uniform(0.94, 1.0), -1),
-                              hidden))
+            items.append(
+                Item(
+                    f"i{k}r",
+                    group,
+                    cat,
+                    round(age + (later - listed).days / 365, 2),
+                    round(usage),
+                    later,
+                    round(price * rng.uniform(0.94, 1.0), -1),
+                    hidden,
+                )
+            )
     return items
 
 
 def write_csv(items: list[Item], path) -> None:
     import csv
+
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
-        w.writerow(["item_id", "group_id", "category", "age_years", "usage", "listed_on",
-                    "price", "condition"])
+        w.writerow(
+            [
+                "item_id",
+                "group_id",
+                "category",
+                "age_years",
+                "usage",
+                "listed_on",
+                "price",
+                "condition",
+            ]
+        )
         for i in items:
-            w.writerow([i.item_id, i.group_id, i.category, i.age_years, i.usage,
-                        i.listed_on.isoformat(), i.price, i.condition or ""])
+            w.writerow(
+                [
+                    i.item_id,
+                    i.group_id,
+                    i.category,
+                    i.age_years,
+                    i.usage,
+                    i.listed_on.isoformat(),
+                    i.price,
+                    i.condition or "",
+                ]
+            )
 
 
 def read_csv(path) -> list[Item]:
     import csv
+
     with open(path, encoding="utf-8") as f:
-        return [Item(r["item_id"], r["group_id"], r["category"], float(r["age_years"]),
-                     float(r["usage"]), date.fromisoformat(r["listed_on"]), float(r["price"]),
-                     r["condition"] or None) for r in csv.DictReader(f)]
+        return [
+            Item(
+                r["item_id"],
+                r["group_id"],
+                r["category"],
+                float(r["age_years"]),
+                float(r["usage"]),
+                date.fromisoformat(r["listed_on"]),
+                float(r["price"]),
+                r["condition"] or None,
+            )
+            for r in csv.DictReader(f)
+        ]

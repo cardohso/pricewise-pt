@@ -3,8 +3,7 @@ from datetime import date
 import pytest
 
 from pricewise.synthetic import generate
-from pricewise.valuation import Item, Valuer
-from pricewise.valuation import comparables
+from pricewise.valuation import Item, Valuer, comparables
 from pricewise.valuation.backtest import metrics, naive_out_of_fold, out_of_fold, time_split
 from pricewise.valuation.ranges import Ranges
 
@@ -46,15 +45,20 @@ def test_the_model_beats_the_comparables_baseline_in_time(items):
 
 
 def test_estimate_has_a_point_inside_its_ranges(items):
-    e = Valuer().fit(items).estimate(
-        Item("x", "x", "compact", 6, 90_000, date(2025, 12, 1), 0, "good"))
+    e = (
+        Valuer()
+        .fit(items)
+        .estimate(Item("x", "x", "compact", 6, 90_000, date(2025, 12, 1), 0, "good"))
+    )
     assert e.wide[0] <= e.likely[0] <= e.point <= e.likely[1] <= e.wide[1]
 
 
 def test_comparables_ignore_the_same_item():
     a = Item("a", "g1", "estate", 5, 80_000, date(2025, 1, 1), 10_000)
     relist = Item("a2", "g1", "estate", 5.1, 80_000, date(2025, 2, 1), 9_800)
-    others = [Item(f"o{k}", f"g{k + 2}", "estate", 5.5, 85_000, date(2025, 1, 1), 11_000)
-              for k in range(3)]
+    others = [
+        Item(f"o{k}", f"g{k + 2}", "estate", 5.5, 85_000, date(2025, 1, 1), 11_000)
+        for k in range(3)
+    ]
     assert [i.item_id for i in comparables.similar([relist, *others], a)] == ["o0", "o1", "o2"]
     assert comparables.estimate([relist, *others], a) == 11_000

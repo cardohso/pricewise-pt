@@ -9,5 +9,4 @@ from pricewise.tax.isv import IsvBreakdown, isv
 from pricewise.tax.iuc import CategoryANotSupported, IucBreakdown, iuc
 from pricewise.tax.vehicle import Fuel, Vehicle
 
-__all__ = ["CategoryANotSupported", "Fuel", "IsvBreakdown", "IucBreakdown", "Vehicle", "isv",
-           "iuc"]
+__all__ = ["CategoryANotSupported", "Fuel", "IsvBreakdown", "IucBreakdown", "Vehicle", "isv", "iuc"]

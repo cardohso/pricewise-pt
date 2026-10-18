@@ -13,13 +13,14 @@ def test_gone_only_after_two_complete_searches_miss_it():
     t = Tracker().feed([s(0, {"x", "y"}), s(1, {"y"}), s(2, {"y"})])
     assert "x" in t.exits and t.active == {"y"}
     e = t.exits["x"]
-    assert e.window == (T0, T0 + timedelta(days=1))           # last seen .. first missed
+    assert e.window == (T0, T0 + timedelta(days=1))  # last seen .. first missed
 
 
 def test_an_incomplete_search_proves_nothing():
-    t = Tracker().feed([s(0, {"x", "y"}), s(1, {"y"}, complete=False),
-                        s(2, {"y"}, complete=False), s(3, {"y"})])
-    assert "x" not in t.exits                                 # only one complete miss
+    t = Tracker().feed(
+        [s(0, {"x", "y"}), s(1, {"y"}, complete=False), s(2, {"y"}, complete=False), s(3, {"y"})]
+    )
+    assert "x" not in t.exits  # only one complete miss
 
 
 def test_a_search_of_another_segment_says_nothing_about_this_one():
@@ -33,7 +34,15 @@ def test_an_item_that_comes_back_never_went():
 
 
 def test_quick_exits():
-    t = Tracker().feed([s(0, {"fast", "slow"}), s(1, {"slow"}), s(2, {"slow"}),
-                        *(s(d, {"slow"}) for d in range(7, 60, 7)), s(57, set()), s(58, set())])
+    t = Tracker().feed(
+        [
+            s(0, {"fast", "slow"}),
+            s(1, {"slow"}),
+            s(2, {"slow"}),
+            *(s(d, {"slow"}) for d in range(7, 60, 7)),
+            s(57, set()),
+            s(58, set()),
+        ]
+    )
     quick = {e.item_id for e in quick_exits(t.exits.values())}
-    assert quick == {"fast"} and t.exits["slow"].days_listed == 56   # gone, but slowly
+    assert quick == {"fast"} and t.exits["slow"].days_listed == 56  # gone, but slowly
